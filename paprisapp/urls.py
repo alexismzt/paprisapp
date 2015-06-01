@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^helpdesk/servicios/$', ServiciosView.as_view(), name='ServiciosIndex'),
     url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
     url(r'^helpdesk/ServicioDetails/(?P<pk>[\w]+)$', ServicioDetailView.as_view(), name='ServicioDetailIndex'),
+    url(r'^helpdesk/coordinacion$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
 ]

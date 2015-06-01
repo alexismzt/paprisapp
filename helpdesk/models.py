@@ -114,7 +114,7 @@ class Servicio(models.Model):
     tecnico = models.ForeignKey(Empleado, limit_choices_to={'etype': '3'}, related_name = 'assigned_to', blank = True, null = True)
     ordenImpresa = models.FileField(upload_to='servicios/%Y/%m/%d', blank = True, null = True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    dateAdded = models.DateField(("Date"), auto_now_add=True)
+    dateAdded = models.DateTimeField(auto_now_add=True)
     fechaTermino = models.DateField(blank = True, null = True)
 
     def __unicode__(self):

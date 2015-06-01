@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+	{%for servicio in servicios%}
+		<br>
+			<p>Folio: {{servicio.folio}}</p>
+			<p>Status del Servicio: {{servicio.status}}</p>			
+			<p>Fecha de alta: {{servicio.dateAdded}}</p>
+		<br>
+	{%endfor%}
+</div>
+{% endblock %}

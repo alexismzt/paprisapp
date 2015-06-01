@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, ListView
 import pdb; 
 from .models import Servicio, Cliente
 
@@ -142,5 +142,17 @@ class ServicioDetailView(DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ServicioDetailView, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        return context
+
+class CoordinacionTecnicaListView(ListView):
+    model = Servicio
+    context_object_name = 'servicios'
+    def get_template_names(self):
+        return 'coordinacion_list.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CoordinacionTecnicaListView, self).get_context_data(**kwargs)
         populateContext(self.request, context)
         return context
