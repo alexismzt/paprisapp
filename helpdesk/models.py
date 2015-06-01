@@ -90,6 +90,9 @@ class Cliente(models.Model):
     def __unicode__(self):
         return '%s %s %s' % (self.nombre, self.apellidop, self.apellidom)
 
+    def get_absolute_url(self):
+        return reverse('cliente-detail', kwargs={'pk': self.pk})
+
 class Orden(models.Model):
     cliente = models.ForeignKey(Cliente, related_name = '+')
     total = models.FloatField()
@@ -112,6 +115,17 @@ class Servicio(models.Model):
     ordenImpresa = models.FileField(upload_to='servicios/%Y/%m/%d', blank = True, null = True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     dateAdded = models.DateField(("Date"), auto_now_add=True)
+    fechaTermino = models.DateField(blank = True, null = True)
 
     def __unicode__(self):
         return '%i' % self.folio
+
+    def save(self): 
+        top = 0
+        if (Servicio.objects.count() > 0):
+            top = Servicio.objects.select_for_update(nowait=True).order_by('-folio')[0].folio
+        self.folio = top + 1
+        super(Servicio, self).save()
+
+    def get_absolute_url(self):
+            return '/helpdesk/ServicioDetails/%d' % self.id 

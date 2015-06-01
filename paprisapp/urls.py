@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login$', 'helpdesk.views.login', name='login'),
+    url(r'^logout$', 'helpdesk.views.logout', name='logout'),  
+    url(r'^$',HomeIndexView.as_view(), name='HomeIndex'),
+    url(r'^helpdesk/servicios/$', ServiciosView.as_view(), name='ServiciosIndex'),
+    url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
+    url(r'^helpdesk/ServicioDetails/(?P<pk>[\w]+)$', ServicioDetailView.as_view(), name='ServicioDetailIndex'),
 ]

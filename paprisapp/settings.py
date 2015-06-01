@@ -97,8 +97,31 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_ROOT = 'media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+import sys
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'helpdesk.page_processors': {
+              'handlers': ['console','file'],
+            'level': 'DEBUG',
+        }
+    }
+}

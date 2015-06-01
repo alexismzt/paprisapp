@@ -4,9 +4,14 @@ from .models import Estados,Localidades,StatusCliente,StatusServicio,Prospecto,A
 
 class ServicioAdmin(admin.ModelAdmin):
     list_display = ('cliente','folio', 'user',)
-    fields =('cliente','folio','reporta','descripcion','status', 'observaciones','coordinador', 'tecnico',)
+    fields =('cliente','reporta','descripcion','status', 'observaciones','coordinador', 'tecnico', 'ordenImpresa', )
     raw_id_fields = ('cliente',)
-    def save_model(self, request, obj, form, change): 
+    def save_model(self, request, obj, form, change):
+        nfolio = 0
+        if (Servicio.objects.count()>0):
+            lastobject = Servicio.objects.select_for_update().order_by('-folio')[0]
+            nfolio = lastobject.folio + 1
+        obj.folio = nfolio
         obj.user = request.user
         obj.save()
         

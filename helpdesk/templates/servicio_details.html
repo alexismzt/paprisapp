@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+<h2 class="content-subhead">Detalles del servicio folio: {{servicio.folio}}</h2>
+<p>Cliente: {{servicio.cliente}}</p>
+<p>Domicilio: {{servicio.cliente.calle}} Numero: {{servicio.cliente.numero}} Num Ext: {{servicio.cliente.numext}}, Codigo Postal : {{servicio.cliente.codigopostal}}, Colonia: {{servicio.cliente.colonia}} </p>
+<p>Persona que reporta: {{servicio.reporta}}</p>
+<p>Descripcion del servicio: {{servicio.descripcion}}</p>
+<p>Coordinador Asignado: {{servicio.coordinador}}</p>
+<button class="button-success pure-button">{{servicio.status}}</button>
+</div>
+{% endblock %}
