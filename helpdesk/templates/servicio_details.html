@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="content">
-<h2 class="content-subhead">Detalles del servicio folio: {{servicio.folio}}</h2>
-<p>Cliente: {{servicio.cliente}}</p>
-<p>Domicilio: {{servicio.cliente.calle}} Numero: {{servicio.cliente.numero}} Num Ext: {{servicio.cliente.numext}}, Codigo Postal : {{servicio.cliente.codigopostal}}, Colonia: {{servicio.cliente.colonia}} </p>
-<p>Persona que reporta: {{servicio.reporta}}</p>
-<p>Descripcion del servicio: {{servicio.descripcion}}</p>
-<p>Coordinador Asignado: {{servicio.coordinador}}</p>
-<button class="button-success pure-button">{{servicio.status}}</button>
+<h2 class="content-subhead">Detalles del servicio folio: <strong>{{servicio.folio}}</strong></h2>
+<p>Cliente: <strong>{{servicio.cliente}}</strong></p>
+<p>Domicilio: <strong>{{servicio.cliente.calle}} Numero: {{servicio.cliente.numero}} Num Ext: {{servicio.cliente.numext}}, Codigo Postal : {{servicio.cliente.codigopostal}}, Colonia: {{servicio.cliente.colonia}} </strong></p>
+<p>Persona que reporta: <strong>{{servicio.reporta}}</strong></p>
+<p>Descripcion del servicio: <strong>{{servicio.descripcion}}</strong></p>
+<p>Coordinador Asignado: <strong>{{servicio.coordinador}}</strong></p>
+<ul>
+    <li>
+        <span>Servicio authroizado por cobranza: <strong>{{servicio.isAuthorized}}</strong></span>
+    </li>
+    {%if servicio.autorizado = False%}
+    <li>
+        <span>Razon por la cual no fue autorizado:</span>
+        <span>{{servicio.authObservacioenes}}</span>
+    </li>
+    {%endif%}
+    {%if not servicio.tecnico = None%}
+    <li><span>Tecnico asignado: <strong>{{servicio.tecnico}}</strong></span></li>
+    <li><span>Fecha de Asignacion: <strong>{{servicio.fechaAsignacion}}</strong></span></li>
+    {%endif%}
+</ul>
+<label for="">Estatus del servicio:  </label><button class="button-success pure-button">{{servicio.status}}</button>
 </div>
 {% endblock %}

@@ -41,16 +41,6 @@ class Empleado(models.Model):
     def __unicode__(self):
         return ('[%s] %s') % (self.get_etype_display(), self.user)
 
-class StatusCliente(models.Model):
-    title = models.CharField(max_length= 25)
-    def __unicode__(self):
-        return self.title
-
-class StatusServicio(models.Model):
-    title = models.CharField(max_length=25)
-    def __unicode__(self):
-        return self.title
-
 class Prospecto(models.Model):
     title = models.CharField(max_length=25)
     def __unicode__(self):
@@ -69,6 +59,7 @@ class Articulo(models.Model):
 
 class Cliente(models.Model):
     TIPOPERSONA_CHOICE = (('1', 'Persona Moral'),('2', 'Persona Fisica'),('3', 'Persona Fisica con Ac. Empresarial'),)
+    STATUSCLIENTE_CHOICE = (('1', 'Al Corriente'),('2', 'Con Morosidad'),)
     codigo = models.CharField(max_length=10)
     tipo = models.CharField(max_length=1, choices=TIPOPERSONA_CHOICE, default='2')
     nombre = models.CharField(max_length = 40)
@@ -86,6 +77,7 @@ class Cliente(models.Model):
     localidad = models.ForeignKey(Localidades, related_name='+')
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     dateAdded = models.DateField(("Date"), auto_now_add=True)
+    statusCliente = models.CharField(max_length=1, choices=STATUSCLIENTE_CHOICE, default='1')
     
     def __unicode__(self):
         return '%s %s %s' % (self.nombre, self.apellidop, self.apellidom)
@@ -104,11 +96,12 @@ class Orden(models.Model):
         return '%s %f' % (sefl.descripcion, self.total)
 
 class Servicio(models.Model):
+    STATUS_CHOICE = (('1', 'Pendiente'),('2', 'Cancelado'),('3', 'En progreso'),('4', 'Cerrado'))
     cliente = models.ForeignKey(Cliente, related_name='+')
     folio= models.IntegerField()
     reporta = models.CharField(max_length = 256)
     descripcion = models.TextField()
-    status = models.ForeignKey(StatusServicio, related_name='+')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICE, default='1')
     observaciones = models.TextField(blank = True, null = True)
     coordinador = models.ForeignKey(Empleado, limit_choices_to={'etype': '2'}, blank= True, null = True)
     tecnico = models.ForeignKey(Empleado, limit_choices_to={'etype': '3'}, related_name = 'assigned_to', blank = True, null = True)
@@ -116,16 +109,29 @@ class Servicio(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     dateAdded = models.DateTimeField(auto_now_add=True)
     fechaTermino = models.DateField(blank = True, null = True)
+    autorizado = models.BooleanField(default=False)
+    authObservacioenes = models.TextField(blank = True, null = True)
+    fechaAsignacion = models.DateTimeField(blank=True, null=True)
+    cerrado = models.BooleanField(default=False)
 
     def __unicode__(self):
         return '%i' % self.folio
 
-    def save(self): 
-        top = 0
-        if (Servicio.objects.count() > 0):
-            top = Servicio.objects.select_for_update(nowait=True).order_by('-folio')[0].folio
-        self.folio = top + 1
+    def save(self):
+        if not self.pk:
+            top = 0
+            if (Servicio.objects.count() > 0):
+                top = Servicio.objects.select_for_update(nowait=True).order_by('-folio')[0].folio
+            self.created = True
+            self.folio = top + 1
+
         super(Servicio, self).save()
 
     def get_absolute_url(self):
-            return '/helpdesk/ServicioDetails/%d' % self.id 
+            return '/helpdesk/ServicioDetails/%d' % self.id
+
+    def isAuthorized(self):
+        if self.autorizado:
+            return 'Si'
+        else:
+            return 'No'

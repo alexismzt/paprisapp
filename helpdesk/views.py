@@ -109,8 +109,7 @@ class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
     model = Servicio
     fields = ('cliente','reporta','descripcion','status','coordinador','user')
-    labels = ('Numero de Cliente','Persona quen reporta','Descricion del reporte',)
-
+    clienteob = Cliente
     def get_initial(self):
         code = self.kwargs['codigo']
         client = get_object_or_404(Cliente, codigo=code)
@@ -119,6 +118,7 @@ class ServicioCreateNew(CreateView):
         initial = super(ServicioCreateNew, self).get_initial()
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
+        self.clienteob = client
         initial['cliente'] = client
         initial['user'] = self.request.user.pk
         return initial
@@ -126,12 +126,35 @@ class ServicioCreateNew(CreateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ServicioCreateNew, self).get_context_data(**kwargs)
+        context['clientob'] = self.clienteob
         populateContext(self.request, context)
         return context
 
-# class ServicioUpdate(UpdateView):
-#     model = Servicio
-#     fields = ('status',)
+import datetime
+class ServicioAsignacionUpdate(UpdateView):
+    model = Servicio
+    fields = ('tecnico','fechaAsignacion',)
+    context_object_name = 'servicioEdit'
+    
+    def get_template_names(self):
+        return 'cobranza_update.html'
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        # pdb.set_trace()
+        initial = super(ServicioAsignacionUpdate, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['fechaAsignacion'] = datetime.datetime.now()
+
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ServicioAsignacionUpdate, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        context['cobranza'] = True
+        return context
 
 class ServicioDetailView(DetailView):
     model = Servicio
@@ -146,8 +169,11 @@ class ServicioDetailView(DetailView):
         return context
 
 class CoordinacionTecnicaListView(ListView):
+    queryset = Servicio.objects.order_by('-folio').filter(autorizado=True)
     model = Servicio
     context_object_name = 'servicios'
+    paginate_by = 20  #and that's it !!
+
     def get_template_names(self):
         return 'coordinacion_list.html'
 
@@ -156,3 +182,34 @@ class CoordinacionTecnicaListView(ListView):
         context = super(CoordinacionTecnicaListView, self).get_context_data(**kwargs)
         populateContext(self.request, context)
         return context
+
+class CobranzaListView(ListView):
+    queryset = Servicio.objects.order_by('-folio').filter(autorizado=False)
+    model = Servicio
+    context_object_name = 'servicios'
+    paginate_by = 20  #and that's it !!
+
+    def get_template_names(self):
+        return 'coordinacion_list.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CobranzaListView, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        context['cobranza'] = True
+        return context
+
+class CobranzaAuthorizeServiceUpdate(UpdateView):
+    model = Servicio
+    fields = ('autorizado','authObservacioenes',)
+    context_object_name = 'servicioEdit'
+    def get_template_names(self):
+        return 'cobranza_update.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CobranzaAuthorizeServiceUpdate, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        context['cobranza'] = True
+        return context
+     

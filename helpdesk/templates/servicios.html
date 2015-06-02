@@ -14,7 +14,6 @@
 	<h2 class="content-subhead">Checar Servicios</h2>
 	<form action="/helpdesk/servicios/" method="POST">
 		{% csrf_token %}
-
 		<label for="noCliente">Folio del servicio</label>
 		<input type="text" name="folioServicio" id="folioServicio">
 		<input type="hidden" name="searchType" id="searchType" value="CheckService"/>

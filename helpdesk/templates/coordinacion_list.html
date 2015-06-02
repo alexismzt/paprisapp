@@ -1,12 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="content">
-	{%for servicio in servicios%}
-		<br>
-			<p>Folio: {{servicio.folio}}</p>
-			<p>Status del Servicio: {{servicio.status}}</p>			
-			<p>Fecha de alta: {{servicio.dateAdded}}</p>
-		<br>
-	{%endfor%}
+	<h2 class="content-subhead">Tiene un total de {{servicios.count}} en lista</h2>
+	<table border="1">
+		<tr><th>Folio</th>
+		<th>Status</th>
+		<th>Fecha de alta</th>
+		<th>Cliente</th>
+		<th>Cliente Status</th>
+		{%if not cobranza%}
+			<th>Authorizado</th>
+			<th>Asignado a:</th>
+			<th>Fecha asignacion</th>
+		{%endif%}
+		</tr>
+		{%for servicio in servicios%}
+			<tr>
+				<td ALIGN=CENTER>
+				{%if not cobranza%}
+					<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
+				{%else%}
+					<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
+				{%endif%}
+				{{servicio.folio}}</a></td>
+				<td ALIGN=CENTER>[{{servicio.get_status_display}}]</td>			
+				<td ALIGN=CENTER>{{servicio.dateAdded|date:'Y-m-d'}}</td>
+				<td ALIGN=CENTER>{{servicio.cliente}} - {{servicio.cliente.pk}}</td>
+				<td ALIGN=CENTER>{{servicio.cliente.get_statusCliente_display}}</td>
+				{%if not cobranza%}
+				<td ALIGN=CENTER>{{servicio.isAuthorized}}</td>
+					{%if servicio.tecnico = None%}
+					<td>No asignado <a href="/helpdesk/asignar/{{servicio.pk}}">Asignar</a></td>
+					<td>Empty</td>
+					{%else%}
+					<td>{{servicio.tecnico}}</td>
+					<td>[{{servicio.fechaAsignacion|date:'Y-m-d'}}]</td>
+					{%endif%}
+				{%endif%}
+			<tr>
+		{%endfor%}
+	</table>
+	{% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="/helpdesk/coordinacion?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="/helpdesk/coordinacion?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

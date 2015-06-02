@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
     url(r'^helpdesk/ServicioDetails/(?P<pk>[\w]+)$', ServicioDetailView.as_view(), name='ServicioDetailIndex'),
     url(r'^helpdesk/coordinacion$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
+    url(r'^helpdesk/coordinacion/(?P<pk>[\w]+)$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
+    url(r'^helpdesk/cobranza$', CobranzaListView.as_view(), name='CobranzaListIndex'),
+    url(r'^helpdesk/cobranzaEdit/(?P<pk>[\w]+)$', CobranzaAuthorizeServiceUpdate.as_view(), name='CobranzaAuthIndex'),
+    url(r'^helpdesk/asignar/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='CobranzaAuthIndex'),
 ]
