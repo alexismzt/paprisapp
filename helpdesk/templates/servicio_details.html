@@ -22,6 +22,6 @@
     <li><span>Fecha de Asignacion: <strong>{{servicio.fechaAsignacion}}</strong></span></li>
     {%endif%}
 </ul>
-<label for="">Estatus del servicio:  </label><button class="button-success pure-button">{{servicio.status}}</button>
+<label for="">Estatus del servicio:  </label><button class="button-success pure-button">{{servicio.get_status_display}}</button>
 </div>
 {% endblock %}

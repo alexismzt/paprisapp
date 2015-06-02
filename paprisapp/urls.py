@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^helpdesk/cobranza$', CobranzaListView.as_view(), name='CobranzaListIndex'),
     url(r'^helpdesk/cobranzaEdit/(?P<pk>[\w]+)$', CobranzaAuthorizeServiceUpdate.as_view(), name='CobranzaAuthIndex'),
     url(r'^helpdesk/asignar/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='CobranzaAuthIndex'),
+    url(r'^helpdesk/clientes/$', ServicioAsignacionUpdate.as_view(), name='ClienteIndex'),
+    url(r'^helpdesk/clientes/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='ClienteEditIndex'),    
 ]

@@ -105,10 +105,12 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
+from .forms import ServicioModelForm, ServicioAsignacionForm    
+
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
     model = Servicio
-    fields = ('cliente','reporta','descripcion','status','coordinador','user')
+    form_class = ServicioModelForm
     clienteob = Cliente
     def get_initial(self):
         code = self.kwargs['codigo']
@@ -133,7 +135,7 @@ class ServicioCreateNew(CreateView):
 import datetime
 class ServicioAsignacionUpdate(UpdateView):
     model = Servicio
-    fields = ('tecnico','fechaAsignacion',)
+    form_class = ServicioAsignacionForm
     context_object_name = 'servicioEdit'
     
     def get_template_names(self):
@@ -146,7 +148,6 @@ class ServicioAsignacionUpdate(UpdateView):
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
         initial['fechaAsignacion'] = datetime.datetime.now()
-
         return initial
 
     def get_context_data(self, **kwargs):
