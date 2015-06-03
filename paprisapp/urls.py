@@ -35,5 +35,5 @@ urlpatterns = [
     url(r'^CRM/clientes/(?P<slug>[\w]+)$', ClientesCRMListView.as_view(), name='ClienteSearchIndex'),
     url(r'^CRM/cliente/(?P<pk>[\w]+)$', ClienteCRMDetailView.as_view(), name='ClienteDetailIndex'),
     url(r'^CRM/cliente/edit/(?P<pk>[\w]+)$', ClienteCRMUpdateView.as_view(), name='ClienteUpdatelIndex'),
-    url(r'^CRM/cliente/new$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+    url(r'^CRM/cliente-new/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
 ]
