@@ -34,7 +34,7 @@
                                         <li><a href="/CRM/clientes">Listado</a></li>
                                         <li><a href="/CRM/clientesNew">Agregar</a></li>
                                         <div class="divider"></div>
-                                        <li><a href="/CRM/repors">Reportes</a></li>
+                                        <li class="disable"><a href="/CRM/repors">Reportes</a></li>
                                     </ul>
                                 </li>
                                 <li class="divider"></li>
@@ -70,6 +70,7 @@
                         </button>
                     </div>
                 </div>
+        </nav>
     </header>
     <section>
             <div>
@@ -90,7 +91,7 @@
     </footer>
 </div>
 {%else%}
-<div>
+<div class="container">
     <h2>{{error}}</h2>
     <form action="/login" method="post">
     {% csrf_token %}
