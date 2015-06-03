@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 class Estados(models.Model):
@@ -9,7 +10,8 @@ class Estados(models.Model):
     IdTipoRiesgo = models.CharField(max_length=1)
     idEstatus = models.CharField(max_length=1)
     def __unicode__(self):
-        return self.nombreEstado
+        info = (self.nombreEstado[:20] + '..') if len(self.nombreEstado) > 20 else self.nombreEstado
+        return info
 
 class Localidades(models.Model):
     idEstado =models.CharField(max_length=10)
@@ -19,7 +21,8 @@ class Localidades(models.Model):
     IdTipoRiesgo=models.CharField(max_length=1)
     idEstatus=models.CharField(max_length=1)
     def __unicode__(self):
-        return '%s' % self.localidad
+        info = (self.localidad[:20] + '..') if len(self.localidad) > 20 else self.localidad
+        return info
 
 class Sucursal(models.Model):
     nombre = models.CharField(max_length=40)
@@ -83,7 +86,10 @@ class Cliente(models.Model):
         return '%s %s %s' % (self.nombre, self.apellidop, self.apellidom)
 
     def get_absolute_url(self):
-        return reverse('cliente-detail', kwargs={'pk': self.pk})
+        return reverse('ClienteDetailIndex', kwargs={'pk': self.pk})
+
+    def get_domicilio(self):
+        return '%s #%s CP: %s, Colonia: %s' % (self.calle, self.numero, self.codigopostal, self.colonia)
 
 class Orden(models.Model):
     cliente = models.ForeignKey(Cliente, related_name = '+')

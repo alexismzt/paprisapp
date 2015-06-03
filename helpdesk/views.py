@@ -105,7 +105,7 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
-from .forms import ServicioModelForm, ServicioAsignacionForm    
+from .forms import ServicioModelForm, ServicioAsignacionForm, ClienteCRMForm
 
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
@@ -213,4 +213,92 @@ class CobranzaAuthorizeServiceUpdate(UpdateView):
         populateContext(self.request, context)
         context['cobranza'] = True
         return context
+
+class ClientesCRMListView(ListView):
+    model = Cliente
+    context_object_name = 'clientes'
+    paginate_by = 20  #and that's it !!
+
+    def get_template_names(self):
+        return 'clienteCRM_list.html'
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ClientesCRMListView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        
+        search = self.kwargs['slug']
+        if len(search) > 0:
+            queryset = Cliente.objects.filter(nombre=search).filter(apellidop=search).filter(apellidom=search).filter(codigo=search)
+        else:
+            queryset = Cliente.objects.all()
+
+        return initial
+    # def get_queryset(self):
+    #     return queryset
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClientesCRMListView, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        return context
+
+class ClienteCRMDetailView(DetailView):
+    model = Cliente
+    context_object_name = 'cliente'
+    def get_template_names(self):
+        return 'cliente_index.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClienteCRMDetailView, self).get_context_data(**kwargs)
+        context['details'] = True
+        populateContext(self.request, context)
+        return context
+
+class ClienteCRMUpdateView(UpdateView):
+    model = Cliente
+    context_object_name = 'cliente'
+    form_class = ClienteCRMForm
+    def get_template_names(self):
+        return 'cliente_index.html'
+    
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ClienteCRMUpdateView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['user'] = self.request.user.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClienteCRMUpdateView, self).get_context_data(**kwargs)
+        context['details'] = False
+        populateContext(self.request, context)
+        return context
+
+class ClienteCRMCreateView(CreateView):
+    model = Cliente
+    context_object_name = 'cliente'
+    form_class = ClienteCRMForm
+    def get_template_names(self):
+        return 'cliente_index.html'
+    
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ClienteCRMCreateView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['user'] = self.request.user.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClienteCRMCreateView, self).get_context_data(**kwargs)
+        context['details'] = False
+        populateContext(self.request, context)
+        return context
+        
      

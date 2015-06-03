@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="example">
+<h3>Clientes</h3>
+<table class="table striped hovered">
+<thead>
+	<th></th>
+	<th class="text-cente">Codigo</th>
+	<th class="text-cente">Apellido Paterno</th>
+	<th class="text-cente">Apellido Materno</th>
+	<th class="text-cente">Nombre</th>
+	<th class="text-cente">RFC</th>
+	<th class="text-cente">Domicilio</th>
+</thead>
+<tbody>
+{% for cliente in clientes %}
+    <tr>
+    	<td><a href="/CRM/cliente/edit/{{cliente.pk}}"><span class="icon-pencil"></span></a>
+    	<a href="/CRM/cliente/{{cliente.pk}}"><span class="icon-search"></span></a>
+    	</td>
+    	<td>{{cliente.codigo}}</td>
+    	<td>{{cliente.nombre|truncatechars:20}}</td>
+    	<td>{{cliente.apellidop|truncatechars:20}}</td>
+    	<td>{{cliente.apellidom|truncatechars:20}}</td>
+    	<td>{{cliente.rfc}}</td>
+    	<td>{{cliente.get_domicilio|truncatechars:30}}</td>
+    </tr>
+{% empty %}
+    <tr><td>No hay Clientes</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if is_paginated %}
+        <div class="pagination">
+            <span class="prev">
+                {% if page_obj.has_previous %}
+                    <a href="/CRM/clientes/?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="/CRM/clientes/?page={{ page_obj.next_page_number }}">next</a>, Mostrando {{clientes.count}} Clientes
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

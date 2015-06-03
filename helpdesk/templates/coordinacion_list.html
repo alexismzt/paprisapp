@@ -1,34 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
-	<h2 class="content-subhead">Tiene un total de {{servicios.count}} en lista</h2>
-	<table border="1">
-		<tr><th>Folio</th>
-		<th>Status</th>
-		<th>Fecha de alta</th>
-		<th>Cliente</th>
-		<th>Cliente Status</th>
-		{%if not cobranza%}
-			<th>Authorizado</th>
-			<th>Asignado a:</th>
-			<th>Fecha asignacion</th>
-		{%endif%}
-		</tr>
+<div class="example">
+	<h2>Tiene un total de {{servicios.count}} en lista</h2>
+	<table class="table striped hovered">
+		<thead>
+			<th></th>
+			<th class="text-left">Folio</th>
+			<th class="text-left">Status</th>
+			<th class="text-left">Fecha de alta</th>
+			<th class="text-left">Cliente</th>
+			<th class="text-left">Cliente Status</th>
+			{%if not cobranza%}
+				<th>Authorizado</th>
+				<th>Asignado a:</th>
+				<th>Fecha asignacion</th>
+			{%endif%}
+		</thead>
+		<tbody>
 		{%for servicio in servicios%}
-			<tr>
-				<td ALIGN=CENTER>
+			<tr class="">
+				<td>
+					{%if not cobranza%}
+						<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
+					{%else%}
+						<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
+					{%endif%}
+					<span class="icon-pencil"></span>
+					</a>
+		    	</td>
+				<td>
 				{%if not cobranza%}
 					<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
 				{%else%}
 					<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
 				{%endif%}
 				{{servicio.folio}}</a></td>
-				<td ALIGN=CENTER>[{{servicio.get_status_display}}]</td>			
-				<td ALIGN=CENTER>{{servicio.dateAdded|date:'Y-m-d'}}</td>
-				<td ALIGN=CENTER>{{servicio.cliente}} - {{servicio.cliente.pk}}</td>
-				<td ALIGN=CENTER>{{servicio.cliente.get_statusCliente_display}}</td>
+				<td>[{{servicio.get_status_display}}]</td>			
+				<td>{{servicio.dateAdded|date:'Y-m-d'}}</td>
+				<td>{{servicio.cliente|truncatechars:40}}</td>
+				<td>{{servicio.cliente.get_statusCliente_display}}</td>
 				{%if not cobranza%}
-				<td ALIGN=CENTER>{{servicio.isAuthorized}}</td>
+				<td>{{servicio.isAuthorized}}</td>
 					{%if servicio.tecnico = None%}
 					<td>No asignado <a href="/helpdesk/asignar/{{servicio.pk}}">Asignar</a></td>
 					<td>Empty</td>
@@ -37,8 +49,9 @@
 					<td>[{{servicio.fechaAsignacion|date:'Y-m-d'}}]</td>
 					{%endif%}
 				{%endif%}
-			<tr>
+			</tr>
 		{%endfor%}
+		</tbody>
 	</table>
 	{% if is_paginated %}
         <div class="pagination">

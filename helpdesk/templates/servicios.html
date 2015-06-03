@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
+<div class="example">
 {%if not cliente%}
-	<h2 class="content-subhead">Dar de alta un nuevo Servicio</h2>
+	<h3>Dar de alta un nuevo Servicio</h3>
 	<form action="/helpdesk/servicios/" method="POST">
 		{% csrf_token %}
 		<label for="noCliente">Numero de Cliente</label>
@@ -11,7 +11,7 @@
 		<button class="button-secondary pure-button">Enviar</button> 
 	</form>
 
-	<h2 class="content-subhead">Checar Servicios</h2>
+	<h3>Checar Servicios</h3>
 	<form action="/helpdesk/servicios/" method="POST">
 		{% csrf_token %}
 		<label for="noCliente">Folio del servicio</label>
@@ -20,7 +20,7 @@
 		<button class="button-secondary pure-button">Enviar</button> 
 	</form>
 {% else %}
-	<h2 class="contest-subhead">{{tipobusqueda}}</h2>
+	<h3>{{tipobusqueda}}</h3>
 	{%if errorFolio%}
 			<h1>{{errorFolioDetail}}</h1>
 	{%endif%}

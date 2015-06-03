@@ -7,46 +7,39 @@
 
     <title>Paprisa.com.mx</title>
 	{% load static from staticfiles %}
-	
-	<!-- jQuery 
-    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>-->
+	<!--
+    <link rel="stylesheet" href="//metroui.org.ua/v2/css/metro-bootstrap.css">
+    <link rel="stylesheet" href="//metroui.org.ua/v2/css/metro-bootstrap-responsive.css">
+    <link rel="stylesheet" href="//metroui.org.ua/v2/css/docs.css">
+    <link rel="stylesheet" href="//metroui.org.ua/v2/css/iconFont.css">
+    <link rel="stylesheet" href="//metroui.org.ua/v2/js/prettify/prettify.css">
+    -->
     
-
+    <link href="{% static 'css/metro-bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/metro-bootstrap-responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'css/iconFont.css' %}" rel="stylesheet">
+    <link href="{% static 'css/docs.css' %}" rel="stylesheet">
+    <link href="{% static 'js/prettify/prettify.css' %}" rel="stylesheet">
     
-    <!--
-    <script src="//purecss.io/combo/1.18.13?/css/layouts/side-menu.css"></script>
-    <link rel="stylesheet" href="//purecss.io/combo/1.18.13?/css/layouts/side-menu.css">
-    <link rel="stylesheet" href="//purecss.io/combo/1.18.13?/css/main-grid.css&/css/main.css&/css/rainbow/baby-blue.css">
-    <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">-->
-    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">-->
-    <link rel="stylesheet" href="{% static 'css/paprisa.css' %}">
-<!--
-    <style scoped>
+    <!--<link href="//metroui.org.ua/v2/css/metro-bootstrap.css" rel="stylesheet">
+    <link href="//metroui.org.ua/v2/css/metro-bootstrap-responsive.css" rel="stylesheet">
+    <link href="//metroui.org.ua/v2/css/iconFont.css" rel="stylesheet">
+    <link href="//metroui.org.ua/v2/css/docs.css" rel="stylesheet">
+    <link href="//metroui.org.ua/v2/js/prettify/prettify.css" rel="stylesheet">-->
 
-        .button-success,
-        .button-error,
-        .button-warning,
-        .button-secondary {
-            color: white;
-            border-radius: 4px;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-        }
+    <!-- Load JavaScript Libraries -->
+    <script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery.widget.min.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'js/prettify/prettify.js' %}"></script>
+    <script src="{% static 'js/holder/holder.js' %}"></script>
 
-        .button-success {
-            background: rgb(28, 184, 65); /* this is a green */
-        }
+    <!-- Metro UI CSS JavaScript plugins -->
+    <script src="{% static 'js/metro.min.js' %}"></script>
 
-        .button-error {
-            background: rgb(202, 60, 60); /* this is a maroon */
-        }
-
-        .button-warning {
-            background: rgb(223, 117, 20); /* this is an orange */
-        }
-
-        .button-secondary {
-            background: rgb(66, 184, 221); /* this is a light blue */
-        }
-
-    </style> -->
+    <!-- Local JavaScript -->
+    <script src="{% static 'js/docs.js' %}"></script>
+    <script src="{% static 'js/github.info.js' %}"></script>
+    <script src="{% static 'js/ga.js' %}"></script>
+    <script src="{% static 'js/hitua.js' %}"></script>
 </head>

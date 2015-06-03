@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
-<h2 class="content-subhead">Detalles del servicio folio: <strong>{{servicio.folio}}</strong></h2>
+<div class="example">
+<h2>Detalles del servicio folio: <strong>{{servicio.folio}}</strong></h2>
 <p>Cliente: <strong>{{servicio.cliente}}</strong></p>
-<p>Domicilio: <strong>{{servicio.cliente.calle}} Numero: {{servicio.cliente.numero}} Num Ext: {{servicio.cliente.numext}}, Codigo Postal : {{servicio.cliente.codigopostal}}, Colonia: {{servicio.cliente.colonia}} </strong></p>
+<p>Domicilio: <strong>{{servicio.cliente.calle}}</strong> Numero: <strong>{{servicio.cliente.numero}}</strong> Num Ext: <strong>{{servicio.cliente.numext}}</strong>, Codigo Postal : <strong>{{servicio.cliente.codigopostal}}</strong>, Colonia: <strong>{{servicio.cliente.colonia}}</strong></p>
 <p>Persona que reporta: <strong>{{servicio.reporta}}</strong></p>
 <p>Descripcion del servicio: <strong>{{servicio.descripcion}}</strong></p>
 <p>Coordinador Asignado: <strong>{{servicio.coordinador}}</strong></p>

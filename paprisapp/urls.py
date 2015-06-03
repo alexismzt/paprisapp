@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView
+from helpdesk.models import Cliente
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login$', 'helpdesk.views.login', name='login'),
-    url(r'^logout$', 'helpdesk.views.logout', name='logout'),  
+    url(r'^logout/$', 'helpdesk.views.logout', name='logout'),  
     url(r'^$',HomeIndexView.as_view(), name='HomeIndex'),
     url(r'^helpdesk/servicios/$', ServiciosView.as_view(), name='ServiciosIndex'),
     url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
@@ -30,6 +31,9 @@ urlpatterns = [
     url(r'^helpdesk/cobranza$', CobranzaListView.as_view(), name='CobranzaListIndex'),
     url(r'^helpdesk/cobranzaEdit/(?P<pk>[\w]+)$', CobranzaAuthorizeServiceUpdate.as_view(), name='CobranzaAuthIndex'),
     url(r'^helpdesk/asignar/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='CobranzaAuthIndex'),
-    url(r'^helpdesk/clientes/$', ServicioAsignacionUpdate.as_view(), name='ClienteIndex'),
-    url(r'^helpdesk/clientes/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='ClienteEditIndex'),    
+    url(r'^CRM/clientes/$', ClientesCRMListView.as_view(), name='ClienteIndex'),
+    url(r'^CRM/clientes/(?P<slug>[\w]+)$', ClientesCRMListView.as_view(), name='ClienteSearchIndex'),
+    url(r'^CRM/cliente/(?P<pk>[\w]+)$', ClienteCRMDetailView.as_view(), name='ClienteDetailIndex'),
+    url(r'^CRM/cliente/edit/(?P<pk>[\w]+)$', ClienteCRMUpdateView.as_view(), name='ClienteUpdatelIndex'),
+    url(r'^CRM/cliente/new$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
 ]

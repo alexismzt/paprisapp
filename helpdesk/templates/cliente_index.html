@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="example">
+{%if details%}
+
+<p>Codigo del Cliente: <strong>{{cliente.codigo}}</strong></p>
+<div class="span3 {%if cliente.statusCliente = '1'%}bg-green {%else%}bg-red {%endif%}padding5 text-center" style="
+    float: right;
+    display: inline-block;
+">
+	<h3 class="fg-white">{{cliente.get_statusCliente_display}}</h3>
+</div>
+<p><strong>{{cliente.get_tipo_display}}</strong></p>
+<p>Nombre: <strong>{{cliente.nombre}}</strong></p>
+<p>Segundo nombre: <strong>{{cliente.segundoNombre}}</strong></p>
+<p>Apellido paterno:<strong>{{cliente.apellidop}}</strong></p>
+<p>Apellido materno:<strong>{{cliente.apellidom}}</strong></p>
+<p>RFC: <strong>{{cliente.rfc}}</strong></p>
+<p>Calle:<strong>{{cliente.calle}} {{cliente.callead}}</strong></p>
+<p>Numero: <strong>{{cliente.numero}}</strong></p>
+<p>Numero Interior: <strong>{{cliente.numext}}</strong></p>
+<p>Codigo Postal: <strong>{{cliente.codigopostal}}</strong></p>
+<p>Colonia: <strong>{{cliente.colonia}}</strong></p>
+<p>Estado: <strong>{{cliente.estado}}</strong></p>
+<p>Ciudad: <strong>{{cliente.localidad}}</strong></p>
+<a href="/CRM/cliente/edit/{{cliente.pk}}">Editar</a>
+<a href="/helpdesk/servicioNew/{{cliente.codigo}}">Crear Servicio</a>
+{%else%}
+	<form action="" method="POST">
+		{% csrf_token %}
+    	<table class="table">
+                {% for field in form %}
+                <th>{{field.label}}:</th>
+                <td>{{field}}{{field.errors.as_ul}}</td>
+                {%if forloop.counter|divisibleby:"2" %}
+                <tr></tr>
+                {%endif%}
+                {%endfor%}
+            </table>
+        <input type="submit" value="Guardar" />
+	</form>
+{%endif%}
+</div>
+{% endblock %}
