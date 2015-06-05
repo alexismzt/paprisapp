@@ -23,5 +23,10 @@
     {%endif%}
 </ul>
 <label for="">Estatus del servicio:  </label><button class="button-success pure-button">{{servicio.get_status_display}}</button>
+    {%if servici.autorizado%}
+        <a href="/helpdesk/ServicioClose/{{servicio.pk}}">Cerrar Servicio</a>
+    {%else%}
+        <a href="#">Este Servicio no esta autorizado</a>
+    {%endif%}
 </div>
 {% endblock %}

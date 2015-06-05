@@ -105,7 +105,7 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
-from .forms import ServicioModelForm, ServicioAsignacionForm, ClienteCRMForm
+from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm
 
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
@@ -156,6 +156,33 @@ class ServicioAsignacionUpdate(UpdateView):
         populateContext(self.request, context)
         context['cobranza'] = True
         return context
+
+class ServicioCierreUpdate(UpdateView):
+    model = Servicio
+    form_class = ServicioCierreForm
+    context_object_name = 'servicioEdit'
+    
+    def get_template_names(self):
+        return 'cobranza_update.html'
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ServicioCierreUpdate, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        serv = Servicio.objects.get(pk=self.kwargs['pk'])
+        initial['fechaTermino'] = datetime.datetime.now().date()
+        initial['cerrado'] = True
+        initial['authObservacioenes'] = serv.authObservacioenes + '\r\n-----------------------\r\n'
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ServicioCierreUpdate, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        context['cobranza'] = False
+        return context
+
 
 class ServicioDetailView(DetailView):
     model = Servicio

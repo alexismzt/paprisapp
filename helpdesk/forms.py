@@ -31,6 +31,17 @@ class ServicioAsignacionForm(ModelForm):
 			'fechaAsignacion':'Fecha de Asignacion',
 		}
 
+class ServicioCierreForm(ModelForm):
+	class Meta:
+		model = Servicio
+		fields = ('cerrado','fechaTermino','authObservacioenes','ordenImpresa',)
+		labels = {
+			'ordenImpresa':'Archivo de Orden',
+			'fechaTermino':'Fecha de Cierre',
+			'authObservacioenes' : 'Observaciones',
+			'cerrado':'Cerrar',
+		}
+
 class ClienteCRMForm(ModelForm):
 	class Meta:
 		model = Cliente

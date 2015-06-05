@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView, ServicioCierreUpdate
+
 from helpdesk.models import Cliente
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     url(r'^helpdesk/servicios/$', ServiciosView.as_view(), name='ServiciosIndex'),
     url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
     url(r'^helpdesk/ServicioDetails/(?P<pk>[\w]+)$', ServicioDetailView.as_view(), name='ServicioDetailIndex'),
+    url(r'^helpdesk/ServicioClose/(?P<pk>[\w]+)$', ServicioCierreUpdate.as_view(), name='ServicioCloseIndex'),
     url(r'^helpdesk/coordinacion$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
     url(r'^helpdesk/coordinacion/(?P<pk>[\w]+)$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
     url(r'^helpdesk/cobranza$', CobranzaListView.as_view(), name='CobranzaListIndex'),
@@ -36,4 +38,5 @@ urlpatterns = [
     url(r'^CRM/cliente/(?P<pk>[\w]+)$', ClienteCRMDetailView.as_view(), name='ClienteDetailIndex'),
     url(r'^CRM/cliente/edit/(?P<pk>[\w]+)$', ClienteCRMUpdateView.as_view(), name='ClienteUpdatelIndex'),
     url(r'^CRM/cliente-new/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+
 ]
