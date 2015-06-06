@@ -47,10 +47,10 @@
                         <a class="element brand" href="#"><span class="icon-printer"></span></a>
                         <span class="element-divider"></span>
                         <div class="element input-element">
-                            <form action="/CRM/clientes/" method="POST">
+                            <form action="/CRM/clientes/" method="GET">
                                 {% csrf_token %}
                                 <div class="input-control text">
-                                    <input type="text" placeholder="Search...">
+                                    <input type="text" name='inputsearch' placeholder="Search...">
                                     <button class="btn-search"></button>
                                 </div>
                             </form>

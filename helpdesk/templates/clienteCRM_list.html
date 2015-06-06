@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="example">
-<h3>Clientes</h3>
+<h3>Clientes {{search}}</h3>
 <table class="table striped hovered">
 <thead>
 	<th></th>
@@ -39,13 +39,13 @@
         <div class="pagination">
             <span class="prev">
                 {% if page_obj.has_previous %}
-                    <a href="/CRM/clientes/?page={{ page_obj.previous_page_number }}">previous</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
                 <span class="page-current">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                 </span>
                 {% if page_obj.has_next %}
-                    <a href="/CRM/clientes/?page={{ page_obj.next_page_number }}">next</a>, Mostrando {{clientes.count}} Clientes
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>, Mostrando {{clientes.count}} Clientes
                 {% endif %}
             </span>
         </div>

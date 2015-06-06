@@ -4,6 +4,7 @@ from django.views.generic import CreateView, UpdateView, DetailView, ListView
 import pdb; 
 from .models import Servicio, Cliente
 
+from django.db.models import Q
 # Create your views here.
 
 ##begin login & logout
@@ -241,6 +242,7 @@ class CobranzaAuthorizeServiceUpdate(UpdateView):
         context['cobranza'] = True
         return context
 
+from django.core.paginator import Paginator
 class ClientesCRMListView(ListView):
     model = Cliente
     context_object_name = 'clientes'
@@ -254,20 +256,28 @@ class ClientesCRMListView(ListView):
         initial = super(ClientesCRMListView, self).get_initial()
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
-        
-        search = self.kwargs['slug']
-        if len(search) > 0:
-            queryset = Cliente.objects.filter(nombre=search).filter(apellidop=search).filter(apellidom=search).filter(codigo=search)
-        else:
-            queryset = Cliente.objects.all()
-
         return initial
-    # def get_queryset(self):
-    #     return queryset
+
+    def get_queryset(self):
+        #pdb.set_trace()
+        if 'inputsearch' in self.request.GET:
+            search = self.request.GET.get("inputsearch")
+            if len(search) > 0:
+                queryset = Cliente.objects.filter(Q(nombre__icontains=search) |Q(apellidop__icontains=search) |Q(apellidom__icontains=search) |Q(codigo__icontains=search))
+            else:
+                queryset = Cliente.objects.all()
+        else:
+                queryset = Cliente.objects.all()
+        paginator = Paginator(queryset, 20) 
+        return queryset
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        context = super(ClientesCRMListView, self).get_context_data(**kwargs)
+        context = super(ClientesCRMListView, self).get_context_data(**kwargs)        
+        
+        q = self.request.GET.get("inputsearch")
+        context['search'] = q
+        
         populateContext(self.request, context)
         return context
 
