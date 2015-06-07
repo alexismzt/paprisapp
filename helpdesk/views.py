@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
 import pdb; 
-from .models import Servicio, Cliente
+from .models import Servicio, Cliente, Articulo
 
 from django.db.models import Q
 # Create your views here.
@@ -106,7 +106,7 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
-from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm
+from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm, ServicioEditForm, ArticulosInventoryForm
 
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
@@ -154,6 +154,30 @@ class ServicioAsignacionUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ServicioAsignacionUpdate, self).get_context_data(**kwargs)
+        populateContext(self.request, context)
+        context['cobranza'] = True
+        return context
+
+class ServicioEditUpdate(UpdateView):
+    model = Servicio
+    form_class = ServicioEditForm
+    context_object_name = 'servicioEdit'
+    
+    def get_template_names(self):
+        return 'cobranza_update.html'
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        # pdb.set_trace()
+        initial = super(ServicioEditUpdate, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['fechaAsignacion'] = datetime.datetime.now()
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ServicioEditUpdate, self).get_context_data(**kwargs)
         populateContext(self.request, context)
         context['cobranza'] = True
         return context
@@ -337,5 +361,82 @@ class ClienteCRMCreateView(CreateView):
         context['details'] = False
         populateContext(self.request, context)
         return context
-        
-     
+
+class ArticulosInventoryCreateView(CreateView):
+    model = Articulo
+    context_object_name = 'articulo'
+    form_class = ArticulosInventoryForm
+    def get_template_names(self):
+        return 'inventory_index.html'
+    
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ArticulosInventoryCreateView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['user'] = self.request.user.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ArticulosInventoryCreateView, self).get_context_data(**kwargs)
+        context['modo'] = 'edit'
+        populateContext(self.request, context)
+        return context
+
+class ArticulosInventoryListView(ListView):
+    model = Articulo
+    context_object_name = 'articulos'
+    paginate_by = 20  #and that's it !!
+
+    def get_template_names(self):
+        return 'inventory_index.html'
+
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ArticulosInventoryListView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ArticulosInventoryListView, self).get_context_data(**kwargs)
+        context['modo'] = 'list'
+        populateContext(self.request, context)
+        return context
+
+class ArticulosInventoryDetailView(DetailView):
+    model = Articulo
+    context_object_name = 'articulo'
+    def get_template_names(self):
+        return 'inventory_index.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ArticulosInventoryDetailView, self).get_context_data(**kwargs)
+        context['modo'] = 'details'
+        populateContext(self.request, context)
+        return context
+
+class ArticulosInventoryUpdateView(UpdateView):
+    model = Articulo
+    context_object_name = 'articulo'
+    form_class = ArticulosInventoryForm
+    def get_template_names(self):
+        return 'inventory_index.html'
+    
+    def get_initial(self):
+        # Get the initial dictionary from the superclass method
+        initial = super(ArticulosInventoryUpdateView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        initial['user'] = self.request.user.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ArticulosInventoryUpdateView, self).get_context_data(**kwargs)
+        context['modo'] = 'edit'
+        populateContext(self.request, context)
+        return context

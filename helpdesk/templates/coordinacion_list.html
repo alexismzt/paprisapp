@@ -21,7 +21,11 @@
 			<tr class="">
 				<td>
 					{%if not cobranza%}
-						<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
+						{%if request.user.is_staff%}
+							<a href="/helpdesk/ServicioEdit/{{servicio.pk}}">
+						{%else%}
+							<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
+						{%endif%}
 					{%else%}
 						<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
 					{%endif%}
@@ -32,7 +36,7 @@
 				{%if not cobranza%}
 					<a href="/helpdesk/ServicioDetails/{{servicio.pk}}">
 				{%else%}
-					<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
+						<a href="/helpdesk/cobranzaEdit/{{servicio.pk}}">
 				{%endif%}
 				{{servicio.folio}}</a></td>
 				<td>[{{servicio.get_status_display}}]</td>			

@@ -60,6 +60,9 @@ class Articulo(models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('ArticuloDetailIndex', kwargs={'pk': self.pk})
+
 class Cliente(models.Model):
     TIPOPERSONA_CHOICE = (('1', 'Persona Moral'),('2', 'Persona Fisica'),('3', 'Persona Fisica con Ac. Empresarial'),)
     STATUSCLIENTE_CHOICE = (('1', 'Al Corriente'),('2', 'Con Morosidad'),)

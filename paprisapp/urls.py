@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView, ServicioCierreUpdate
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView, ServicioCierreUpdate, ServicioEditUpdate, ArticulosInventoryCreateView, ArticulosInventoryListView,ArticulosInventoryDetailView,ArticulosInventoryUpdateView
 
 from helpdesk.models import Cliente
 
@@ -24,19 +24,32 @@ urlpatterns = [
     url(r'^login$', 'helpdesk.views.login', name='login'),
     url(r'^logout/$', 'helpdesk.views.logout', name='logout'),  
     url(r'^$',HomeIndexView.as_view(), name='HomeIndex'),
+    
     url(r'^helpdesk/servicios/$', ServiciosView.as_view(), name='ServiciosIndex'),
     url(r'^helpdesk/servicioNew/(?P<codigo>[\w]+)$', ServicioCreateNew.as_view(), name='ServicioCreateNewIndex'),
     url(r'^helpdesk/ServicioDetails/(?P<pk>[\w]+)$', ServicioDetailView.as_view(), name='ServicioDetailIndex'),
     url(r'^helpdesk/ServicioClose/(?P<pk>[\w]+)$', ServicioCierreUpdate.as_view(), name='ServicioCloseIndex'),
+    url(r'^helpdesk/ServicioEdit/(?P<pk>[\w]+)$', ServicioEditUpdate.as_view(), name='ClienteCreateIndex'),    
+    
     url(r'^helpdesk/coordinacion$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
     url(r'^helpdesk/coordinacion/(?P<pk>[\w]+)$', CoordinacionTecnicaListView.as_view(), name='CoordinacionTecnicaIndex'),
+    
     url(r'^helpdesk/cobranza$', CobranzaListView.as_view(), name='CobranzaListIndex'),
     url(r'^helpdesk/cobranzaEdit/(?P<pk>[\w]+)$', CobranzaAuthorizeServiceUpdate.as_view(), name='CobranzaAuthIndex'),
+    
     url(r'^helpdesk/asignar/(?P<pk>[\w]+)$', ServicioAsignacionUpdate.as_view(), name='CobranzaAuthIndex'),
+    
     url(r'^CRM/clientes/$', ClientesCRMListView.as_view(), name='ClienteIndex'),
     url(r'^CRM/clientes/(?P<search>[\w]+)/', ClientesCRMListView.as_view(), name='ClienteSearchIndex'),
     url(r'^CRM/cliente/(?P<pk>[\w]+)$', ClienteCRMDetailView.as_view(), name='ClienteDetailIndex'),
     url(r'^CRM/cliente/edit/(?P<pk>[\w]+)$', ClienteCRMUpdateView.as_view(), name='ClienteUpdatelIndex'),
     url(r'^CRM/cliente-new/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+
+    url(r'^CRM/Ordenes/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+
+    url(r'^inventory/articulos/$', ArticulosInventoryListView.as_view(), name='ArticuloIndex'),
+    url(r'^inventory/articuloNew/$', ArticulosInventoryCreateView.as_view(), name='ArticuloCreateIndex'),
+    url(r'^inventory/articuloDetail/(?P<pk>[\w]+)$', ArticulosInventoryDetailView.as_view(), name='ArticuloDetailIndex'),
+    url(r'^inventory/articuloEdit/(?P<pk>[\w]+)$', ArticulosInventoryUpdateView.as_view(), name='ArticuloEditIndex'),
 
 ]

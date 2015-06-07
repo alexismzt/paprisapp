@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="example">
+    {%if modo == 'edit'%}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Guardar" />
+        </form>
+    {%elif modo == 'list'%}
+        <table class="table striped bordered hovered">
+        <thead>
+            <th style="width: 50px;"></th>
+            <th class="text-center">code</th>
+            <th class="text-center">title</th>
+            <th class="text-center">Descripcion</th>
+            <th class="text-center">precio</th>
+        </thead>
+        <tbody>
+        {% for articulo in articulos %}
+            <tr>
+                <td><a  href="/inventory/articuloEdit/{{articulo.pk}}"><span class="icon-pencil"></span></a>
+                <a href="/inventory/articuloDetail/{{articulo.pk}}"><span class="icon-search"></span></a>
+                </td>
+                <td>{{articulo.code}}</td>
+                <td>{{articulo.title|truncatechars:20}}</td>
+                <td>{{articulo.descripcion|truncatechars:40}}</td>
+                <td>{{articulo.precio}}</td>
+            </tr>
+        {% empty %}
+            <tr><td>No hay Articulos</td>
+            <td></td>
+            <td></td>
+            <td></td>   
+            <td></td>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% if is_paginated %}
+                <div class="pagination">
+                    <span class="prev">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                        <span class="page-current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>, Mostrando {{articulos.count}} Articulos
+                        {% endif %}
+                    </span>
+                </div>
+        {% endif %}
+    {%else%}
+        <p>Codigo: <strong>{{articulo.code}}</strong></p>
+        <p>Nombre: <strong>{{articulo.title}}</strong></p>
+        <p>Descripcion: <strong>{{articulo.descripcion}}</strong></p>
+        <p>Precio: $<strong>{{articulo.precio}}</strong></p>
+    {%endif%}
+</div>
+{% endblock %}

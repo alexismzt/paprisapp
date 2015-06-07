@@ -34,7 +34,16 @@
                                         <li><a href="/CRM/clientes">Listado</a></li>
                                         <li><a href="/CRM/cliente-new">Agregar</a></li>
                                         <div class="divider"></div>
-                                        <li class="disabled"><a href="/CRM/repors">Reportes</a></li>
+                                        <li class="disabled"><a href="/CRM/reportes">Reportes</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-toggle">Inventario</a>
+                                    <ul class="dropdown-menu light" data-role="dropdown">
+                                        <li><a href="/inventory/articulos">Listado</a></li>
+                                        <li><a href="/inventory/articuloNew">Agregar</a></li>
+                                        <div class="divider"></div>
+                                        <li class="disabled"><a href="/inventory/reportes">Reportes</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -50,7 +59,7 @@
                             <form action="/CRM/clientes/" method="GET">
                                 {% csrf_token %}
                                 <div class="input-control text">
-                                    <input type="text" name='inputsearch' placeholder="Search...">
+                                    <input type="text" name='inputsearch' placeholder="Clientes...">
                                     <button class="btn-search"></button>
                                 </div>
                             </form>
