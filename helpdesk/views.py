@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
 import pdb; 
-from .models import Servicio, Cliente, Articulo
+from .models import Servicio, Cliente, Articulo, Orden
 
 from django.db.models import Q
 # Create your views here.
@@ -106,7 +106,7 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
-from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm, ServicioEditForm, ArticulosInventoryForm
+from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm, ServicioEditForm, ArticulosInventoryForm, OrdenCRMForm
 
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
@@ -437,6 +437,33 @@ class ArticulosInventoryUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ArticulosInventoryUpdateView, self).get_context_data(**kwargs)
+        context['modo'] = 'edit'
+        populateContext(self.request, context)
+        return context
+
+class OrdenNewCreateView(CreateView):
+    model = Orden
+    form_class = OrdenCRMForm
+    
+    def get_template_names(self):
+        return 'orden_index.html'
+
+    def get_initial(self):
+        uid = self.kwargs['pk']
+        client = get_object_or_404(Cliente, pk=uid)
+        # pdb.set_trace()
+        # Get the initial dictionary from the superclass method
+        initial = super(OrdenNewCreateView, self).get_initial()
+        # Copy the dictionary so we don't accidentally change a mutable dict
+        initial = initial.copy()
+        #self.clienteob = client
+        initial['cliente'] = client
+        initial['user'] = self.request.user.pk
+        return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(OrdenNewCreateView, self).get_context_data(**kwargs)
         context['modo'] = 'edit'
         populateContext(self.request, context)
         return context

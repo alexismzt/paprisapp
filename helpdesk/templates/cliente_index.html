@@ -25,6 +25,7 @@
 <p>Ciudad: <strong>{{cliente.localidad}}</strong></p>
 <a href="/CRM/cliente/edit/{{cliente.pk}}">Editar</a>
 <a href="/helpdesk/servicioNew/{{cliente.codigo}}">Crear Servicio</a>
+<a href="/CRM/OrdenesNEW/{{cliente.pk}}">Crear Orden de compra</a>
 {%else%}
 	<form action="" method="POST">
 		{% csrf_token %}

@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Servicio, Cliente, Articulo
+from .models import Servicio, Cliente, Articulo, Orden
 
 class ServicioModelForm(ModelForm):
     class Meta:
@@ -87,3 +87,19 @@ class ArticulosInventoryForm(ModelForm):
     class Meta:
         model =Articulo
         fields=('code','title','descripcion','precio','user')
+
+class OrdenCRMForm(ModelForm):
+    class Meta:
+        model = Orden
+        fields =('cliente','articulo','descripcion','total', 'user',)
+        labels = {
+        'cliente' : 'Cliente',
+        'total' : 'Total',
+        'articulo' : 'Articulos',
+        'descripcion' : 'Descripcion de la venta',
+        'user' : 'Usuario:',
+        }
+        widget = {
+        'articulo' : forms.,
+        }
+

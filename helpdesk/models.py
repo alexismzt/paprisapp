@@ -102,7 +102,7 @@ class Orden(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     dateAdded = models.DateField(("Date"), auto_now_add=True)
     def __unicode__(self):
-        return '%s %f' % (sefl.descripcion, self.total)
+        return '%s %f' % (self.descripcion, self.total)
 
 class Servicio(models.Model):
     STATUS_CHOICE = (('1', 'Pendiente'),('2', 'Cancelado'),('3', 'En progreso'),('4', 'Cerrado'))

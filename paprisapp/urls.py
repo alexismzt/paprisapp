@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView, ServicioCierreUpdate, ServicioEditUpdate, ArticulosInventoryCreateView, ArticulosInventoryListView,ArticulosInventoryDetailView,ArticulosInventoryUpdateView
+from helpdesk.views import HomeIndexView, ServiciosView, ServicioCreateNew, ServicioDetailView, CoordinacionTecnicaListView, CobranzaListView, CobranzaAuthorizeServiceUpdate, ServicioAsignacionUpdate,ClientesCRMListView, ClienteCRMDetailView, ClienteCRMUpdateView, ClienteCRMCreateView, ServicioCierreUpdate, ServicioEditUpdate, ArticulosInventoryCreateView, ArticulosInventoryListView,ArticulosInventoryDetailView,ArticulosInventoryUpdateView, OrdenNewCreateView
 
 from helpdesk.models import Cliente
 
@@ -43,9 +43,9 @@ urlpatterns = [
     url(r'^CRM/clientes/(?P<search>[\w]+)/', ClientesCRMListView.as_view(), name='ClienteSearchIndex'),
     url(r'^CRM/cliente/(?P<pk>[\w]+)$', ClienteCRMDetailView.as_view(), name='ClienteDetailIndex'),
     url(r'^CRM/cliente/edit/(?P<pk>[\w]+)$', ClienteCRMUpdateView.as_view(), name='ClienteUpdatelIndex'),
-    url(r'^CRM/cliente-new/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+    url(r'^CRM/cliente-new/(?P<pk>[\w]+)$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
 
-    url(r'^CRM/Ordenes/$', ClienteCRMCreateView.as_view(), name='ClienteCreateIndex'),
+    url(r'^CRM/OrdenesNEW/(?P<pk>[\w]+)$', OrdenNewCreateView.as_view(), name='ClienteCreateIndex'),
 
     url(r'^inventory/articulos/$', ArticulosInventoryListView.as_view(), name='ArticuloIndex'),
     url(r'^inventory/articuloNew/$', ArticulosInventoryCreateView.as_view(), name='ArticuloCreateIndex'),
