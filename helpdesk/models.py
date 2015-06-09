@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from decimal import Decimal
 
 # Create your models here.
 class Estados(models.Model):
@@ -53,7 +54,7 @@ class Articulo(models.Model):
     code = models.CharField(max_length=30)
     title = models.CharField(max_length=40)
     descripcion = models.CharField(max_length=256)
-    precio = models.FloatField()
+    precio = models.DecimalField(max_digits=8, decimal_places=2, default=1)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     dateAdded = models.DateField(("Date"), auto_now_add=True)
 
@@ -93,16 +94,6 @@ class Cliente(models.Model):
 
     def get_domicilio(self):
         return '%s #%s CP: %s, Colonia: %s' % (self.calle, self.numero, self.codigopostal, self.colonia)
-
-class Orden(models.Model):
-    cliente = models.ForeignKey(Cliente, related_name = '+')
-    total = models.FloatField()
-    articulo = models.ManyToManyField(Articulo, related_name='+')
-    descripcion = models.CharField(max_length=140)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    dateAdded = models.DateField(("Date"), auto_now_add=True)
-    def __unicode__(self):
-        return '%s %f' % (self.descripcion, self.total)
 
 class Servicio(models.Model):
     STATUS_CHOICE = (('1', 'Pendiente'),('2', 'Cancelado'),('3', 'En progreso'),('4', 'Cerrado'))
@@ -144,3 +135,40 @@ class Servicio(models.Model):
             return 'Si'
         else:
             return 'No'
+
+import pdb; 
+
+class Orden(models.Model):
+    cliente = models.ForeignKey(Cliente, related_name = '+')    
+    descripcion = models.CharField(max_length=140)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    dateAdded = models.DateField(("Date"), auto_now_add=True)
+    
+    def __unicode__(self):
+        return '%s' % (self.descripcion)
+
+    def total_amount(self):
+        total = 0
+        for item in self.items.all():
+            total = total + item.total()
+        return total
+    total_amount.short_description = "total"
+
+    def get_absolute_url(self):
+        return reverse('OrdenDetailIndex', kwargs={'pk': self.pk})
+        
+    class Meta:
+        verbose_name = "Orden"
+        verbose_name_plural = "Ordenes de venta"
+
+class OrdenItem(models.Model):
+    orden = models.ForeignKey(Orden, related_name='items')
+    articulo = models.ForeignKey(Articulo, related_name = 'articleItem')
+    qty = models.DecimalField(max_digits=8, decimal_places=2, default=1)
+
+    def total(self):
+        total = self.articulo.precio * self.qty
+        return total.quantize(Decimal('0.01'))
+    class Meta:
+        verbose_name = "Orden item"
+        verbose_name_plural = "Orden items"

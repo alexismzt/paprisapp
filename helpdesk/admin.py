@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Estados,Localidades,Prospecto,Articulo,Cliente,Orden,Servicio,Empleado, Sucursal
+from .models import Estados,Localidades,Prospecto,Articulo,Cliente,Orden,Servicio,Empleado, Sucursal, Orden, OrdenItem
+#from .forms import InvoiceAdminForm
 # Register your models here.
 
 class ServicioAdmin(admin.ModelAdmin):
@@ -14,7 +15,15 @@ class ServicioAdmin(admin.ModelAdmin):
         obj.folio = nfolio
         obj.user = request.user
         obj.save()
-        
+
+class OrdenItemAdmin(admin.TabularInline):
+    model = OrdenItem    
+    extra = 1
+
+class OrdenAdmin(admin.ModelAdmin):
+    inlines = [OrdenItemAdmin,]
+    list_display = ('cliente','descripcion','total_amount',)
+
 class ClienteAdmin(admin.ModelAdmin):
     list_display = ('codigo', 'nombre', 'apellidop', 'apellidom','calle','numero',)
     search_fields = ('codigo', 'nombre', 'apellidop', 'apellidom', )
@@ -26,13 +35,12 @@ class SucursalAdmin(admin.ModelAdmin):
     list_display = ('nombre','direccion','numint','estado','municipio',)
     raw_id_fields = ('estado','municipio',)
 
-
 admin.site.register(Estados)
 admin.site.register(Localidades)
 admin.site.register(Prospecto)
 admin.site.register(Articulo)
 admin.site.register(Cliente, ClienteAdmin)
-admin.site.register(Orden)
+admin.site.register(Orden, OrdenAdmin)
 admin.site.register(Sucursal, SucursalAdmin)
 admin.site.register(Empleado, EmpleadoAdmin)
 admin.site.register(Servicio, ServicioAdmin)

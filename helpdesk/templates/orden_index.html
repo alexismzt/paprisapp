@@ -2,9 +2,74 @@
 {% block content %}
 <div class="example">
     {%if modo == 'edit'%}
+
+<script type="text/html" id="item-template">
+    <tr id="item-__prefix__">
+    {% for form in formset.forms %}
+        {% for field in form.visible_fields %}
+            <td>
+            {# Include the hidden fields in the form #}
+            {% if forloop.first %}
+              {% for hidden in form.hidden_fields %}
+              {{ hidden }}
+              {% endfor %}
+            {% endif %}
+              {{ field.errors.as_ul }}
+              {{ field }}
+            </td>
+      {% endfor %}
+      {% endfor %}
+    </tr>
+</script>
+<script>
+    $(function() {
+        $('.add-item').click(function(ev){
+            ev.preventDefault();
+            var count = parseInt($('#id_item_set-TOTAL_FORMS').attr('value'), 10);
+            var tmplMarkup = $('#item-template').html();
+            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count)
+            console.log(compiledTmpl);
+            $('table.table').append(compiledTmpl);
+            $('#id_item_set-TOTAL_FORMS').attr('value', count + 1);
+        });
+    });
+</script>
+
         <form action="" method="post">
+            {{ formset.management_form }}
             {% csrf_token %}
-            {{form.as_p}}
+            {{form.as_p}}            
+            <legend>
+                <div class="pull-right"><a href="#" class="btn btn-inverse add-item"><i class="icon-plus icon-white"></i> Agregar Item</a></div>
+                Articulos
+            </legend>
+             <div class="item form-inline">
+                <table id="formset" class="table striped hovered">
+                    {% for form in formset.forms %}
+                      {% if forloop.first %}
+                      <thead><tr>
+                        {% for field in form.visible_fields %}
+                        <th>{{ field.label|capfirst }}</th>
+                        {% endfor %}
+                      </tr></thead>
+                      {% endif %}
+                      <tr>
+                      {% for field in form.visible_fields %}
+                        <td>
+                        {# Include the hidden fields in the form #}
+                        {% if forloop.first %}
+                          {% for hidden in form.hidden_fields %}
+                          {{ hidden }}
+                          {% endfor %}
+                        {% endif %}
+                          {{ field.errors.as_ul }}
+                          {{ field }}
+                        </td>
+                      {% endfor %}
+                      </tr>
+                    {% endfor %}
+                </table>
+            </div>
             <input type="submit" value="Guardar" />
         </form>
     {%elif modo == 'list'%}
@@ -33,6 +98,7 @@
             <td></td>
             <td></td>   
             <td></td>
+            </tr>
         {% endfor %}
         </tbody>
         </table>
@@ -52,10 +118,34 @@
                 </div>
         {% endif %}
     {%else%}
+        {{privatekey}}
         <p>Cliente: <strong>{{orden.cliente}}</strong></p>
-        <p>Descripcion: $<strong>{{orden.descripcion}}</strong></p>
-        <p>Articulos: <strong>{{orden.articulos}}</strong></p>
-        <p>Total: <strong>{{orden.total}}</strong></p>
+        <p>Descripcion: <strong>{{orden.descripcion}}</strong></p>        
+        
+        <p>Articulos:</p>
+        <table class="table striped hovered">
+            <thead>
+                <th>Articulo</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </thead>
+            {%for item in items%}
+                <tr>
+                    <td>{{item.articulo}}</td>
+                    <td>{{item.qty}}</td>
+                    <td>{{item.articulo.precio}}</td>
+                    <td>{{item.total}}</td>
+                </tr>
+            {%endfor%}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong>{{orden.total_amount}}</strong></td>
+            </tr>
+        </table>
     {%endif%}
 </div>
+
 {% endblock %}

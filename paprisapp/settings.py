@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'helpdesk',
     'autofixture',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (

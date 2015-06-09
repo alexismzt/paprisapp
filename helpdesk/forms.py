@@ -2,7 +2,8 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Servicio, Cliente, Articulo, Orden
+from .models import Servicio, Cliente, Articulo, Orden, OrdenItem
+from django.forms.models import inlineformset_factory
 
 class ServicioModelForm(ModelForm):
     class Meta:
@@ -91,15 +92,16 @@ class ArticulosInventoryForm(ModelForm):
 class OrdenCRMForm(ModelForm):
     class Meta:
         model = Orden
-        fields =('cliente','articulo','descripcion','total', 'user',)
+        fields =('cliente','descripcion', 'user',)
         labels = {
         'cliente' : 'Cliente',
-        'total' : 'Total',
-        'articulo' : 'Articulos',
         'descripcion' : 'Descripcion de la venta',
         'user' : 'Usuario:',
         }
-        widget = {
-        'articulo' : forms.,
-        }
 
+class OrdenItemCRMForm(ModelForm):
+    class Meta:
+        model = OrdenItem
+        fields = ('articulo','qty',)
+
+OrdenItemFormSet = inlineformset_factory(Orden, OrdenItem, OrdenItemCRMForm, extra=0, min_num=1,)

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
 import pdb; 
-from .models import Servicio, Cliente, Articulo, Orden
+from .models import Servicio, Cliente, Articulo, Orden, OrdenItem
 
 from django.db.models import Q
 # Create your views here.
@@ -106,7 +106,7 @@ class ServiciosView(TemplateView):
         populateContext(request, context)
         return render(request, self.template_name, context)
 
-from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm, ServicioEditForm, ArticulosInventoryForm, OrdenCRMForm
+from .forms import ServicioModelForm, ServicioAsignacionForm, ServicioCierreForm, ClienteCRMForm, ServicioEditForm, ArticulosInventoryForm, OrdenCRMForm, OrdenItemFormSet, OrdenItemCRMForm
 
 class ServicioCreateNew(CreateView):
     template_name = 'servicio_form.html'
@@ -441,18 +441,71 @@ class ArticulosInventoryUpdateView(UpdateView):
         populateContext(self.request, context)
         return context
 
-class OrdenNewCreateView(CreateView):
+class FormsetMixin(object):
+    object = None
+
+    def get(self, request, *args, **kwargs):
+        if getattr(self, 'is_update_view', False):
+            self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        formset_class = self.get_formset_class()
+        formset = self.get_formset(formset_class)
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
+    def post(self, request, *args, **kwargs):
+        if getattr(self, 'is_update_view', False):
+            self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        formset_class = self.get_formset_class()
+        formset = self.get_formset(formset_class)
+        #pdb.set_trace()
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form, formset)
+        else:
+            return self.form_invalid(form, formset)
+
+    def get_formset_class(self):
+        return self.formset_class
+
+    def get_formset(self, formset_class):
+        return formset_class(**self.get_formset_kwargs())
+
+    def get_formset_kwargs(self):
+        kwargs = {
+            'instance': self.object
+        }
+        if self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return kwargs
+
+    def form_valid(self, form, formset):
+        self.object = form.save()
+        formset.instance = self.object
+        formset.save()
+        if hasattr(self, 'get_success_message'):
+            self.get_success_message(form)
+        return redirect(self.object.get_absolute_url())
+
+    def form_invalid(self, form, formset):
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
+class OrdenNewCreateView( CreateView):
     model = Orden
     form_class = OrdenCRMForm
-    
+    formset_class = OrdenItemFormSet
+
     def get_template_names(self):
         return 'orden_index.html'
 
     def get_initial(self):
         uid = self.kwargs['pk']
         client = get_object_or_404(Cliente, pk=uid)
-        # pdb.set_trace()
-        # Get the initial dictionary from the superclass method
+
         initial = super(OrdenNewCreateView, self).get_initial()
         # Copy the dictionary so we don't accidentally change a mutable dict
         initial = initial.copy()
@@ -465,5 +518,39 @@ class OrdenNewCreateView(CreateView):
         # Call the base implementation first to get a context
         context = super(OrdenNewCreateView, self).get_context_data(**kwargs)
         context['modo'] = 'edit'
+        populateContext(self.request, context)
+        
+        if self.request.POST:
+            context['formset'] = OrdenItemFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['formset'] = OrdenItemFormSet()
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        #pdb.set_trace()
+        if form.is_valid() and formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return redirect(self.object.get_absolute_url())  # assuming your model has ``get_absolute_url`` defined.
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+class OrdenDetailView(DetailView):
+    model = Orden
+    context_object_name = 'orden'
+    def get_template_names(self):
+        return 'orden_index.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(OrdenDetailView, self).get_context_data(**kwargs)
+        uid = self.kwargs['pk']
+        context['items'] = OrdenItem.objects.filter(orden = uid)
+        context['privatekey'] = uid
+        context['modo'] = 'details'
         populateContext(self.request, context)
         return context
