@@ -521,6 +521,7 @@ class OrdenNewCreateView( CreateView):
         populateContext(self.request, context)
         
         if self.request.POST:
+            #pdb.set_trace()
             context['formset'] = OrdenItemFormSet(self.request.POST, self.request.FILES)
         else:
             context['formset'] = OrdenItemFormSet()
